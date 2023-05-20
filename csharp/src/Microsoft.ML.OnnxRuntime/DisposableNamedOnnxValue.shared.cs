@@ -167,9 +167,9 @@ namespace Microsoft.ML.OnnxRuntime
         {
             DisposableNamedOnnxValue result = null;
 
-            IntPtr valueType;
-            NativeApiStatus.VerifySuccess(NativeMethods.OrtGetValueType(ortValue.Handle, out valueType));
-            OnnxValueType onnxValueType = (OnnxValueType)valueType;
+            //IntPtr valueType;
+            //NativeApiStatus.VerifySuccess(NativeMethods.OrtGetValueType(ortValue.Handle, out valueType));
+            var onnxValueType = ortValue.OnnxType;
             switch (onnxValueType)
             {
                 case OnnxValueType.ONNX_TYPE_TENSOR:
