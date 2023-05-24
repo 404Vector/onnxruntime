@@ -1849,7 +1849,7 @@ void GetCrossAttentionData_HeadSize40(AttentionTestData& data) {
   }
 
   {
-    data.fp32_output_data = {
+    data.biased.fp32_output_data = {
         -1.5234375f, 2.4179688f, 0.95751953f, -1.9316406f, 0.012382507f, 1.4960938f, -1.9111328f, 2.0234375f, 3.0371094f, -6.7265625f, 1.4042969f, -1.4414062f, 0.094665527f, 3.6640625f, 2.359375f, 5.6601562f, -5.3828125f, 1.2773438f, -4.0664062f, 1.6591797f, -2.2949219f, 4.28125f, -0.15026855f, 0.16455078f, 1.4853516f, 0.15344238f, 1.1035156f, 1.2519531f, 4.1132812f, -3.9667969f, -0.036193848f, -0.94482422f, 1.9208984f, 2.1347656f, -0.088317871f, -4.8007812f, -0.78320312f, -2.0410156f, -0.82910156f, -2.3085938f,
 
         0.35595703f, -2.7089844f, -0.53466797f, 3.28125f, -3.3242188f, 1.6640625f, -2.3496094f, 0.5625f, 2.3027344f, 4.9140625f, 3.5175781f, 1.8925781f, -3.8359375f, 2.1679688f, -0.61572266f, -1.8320312f, -1.9023438f, -2.3320312f, -0.97753906f, 2.5234375f, 3.1386719f, 0.89355469f, -3.5566406f, -3.2089844f, 2.5566406f, -2.7363281f, -6.6796875f, -2.2128906f, 1.4150391f, 4.71875f, 0.19372559f, -1.4521484f, -1.3769531f, -5.546875f, -0.63916016f, 0.27954102f, 0.76757812f, 5.7695312f, 3.2148438f, 4.1953125f,
@@ -1876,7 +1876,7 @@ void GetCrossAttentionData_HeadSize40(AttentionTestData& data) {
   }
 
   {
-    data.fp16_output_data = {
+    data.biased.fp16_output_data = {
         -1.5244141f, 2.4199219f, 0.95751953f, -1.9316406f, 0.012390137f, 1.4970703f, -1.9111328f, 2.0234375f, 3.0371094f, -6.7265625f, 1.4042969f, -1.4414062f, 0.094665527f, 3.6640625f, 2.3613281f, 5.6601562f, -5.3828125f, 1.2783203f, -4.0664062f, 1.6591797f, -2.2949219f, 4.28125f, -0.15026855f, 0.16455078f, 1.4853516f, 0.15344238f, 1.1035156f, 1.2519531f, 4.1132812f, -3.9667969f, -0.036193848f, -0.94482422f, 1.9208984f, 2.1347656f, -0.088317871f, -4.8007812f, -0.78369141f, -2.0410156f, -0.82910156f, -2.3085938f,
 
         0.35595703f, -2.7089844f, -0.53417969f, 3.28125f, -3.3242188f, 1.6640625f, -2.3496094f, 0.5625f, 2.3027344f, 4.9140625f, 3.5175781f, 1.8925781f, -3.8359375f, 2.1679688f, -0.61572266f, -1.8320312f, -1.9023438f, -2.3320312f, -0.97753906f, 2.5234375f, 3.1386719f, 0.89355469f, -3.5566406f, -3.2089844f, 2.5566406f, -2.7363281f, -6.6796875f, -2.2128906f, 1.4150391f, 4.71875f, 0.19372559f, -1.4521484f, -1.3769531f, -5.546875f, -0.63916016f, 0.27954102f, 0.76757812f, 5.7695312f, 3.2148438f, 4.1953125f,
@@ -2107,7 +2107,7 @@ void GetCrossAttentionData_Batch2_HeadSize32_RightSidePadding(AttentionTestData&
   }
 
   {
-    data.fp32_output_data = {
+    data.biased.fp32_output_data = {
         2.42288446f, 1.27227366f, 0.74894810f, 1.28347683f, 1.39642823f, -1.93045688f, 0.45777908f, -1.26743007f,
         0.29003966f, -3.80550122f, 0.80094421f, 0.50959778f, -0.54627192f, 1.66060388f, 0.25552815f, 2.24310493f,
         3.67831278f, -0.59018224f, 1.76608253f, -0.22999156f, 0.30660450f, 1.82401633f, -0.64727861f, 0.14090568f,
@@ -2146,7 +2146,7 @@ void GetCrossAttentionData_Batch2_HeadSize32_RightSidePadding(AttentionTestData&
   }
 
   {
-    data.fp16_output_data = data.fp32_output_data;
+    data.biased.fp16_output_data = data.biased.fp32_output_data;
   }
 }
 
@@ -2261,7 +2261,7 @@ void GetCrossAttentionData_Batch1_HeadSize32_LeftSidePadding(AttentionTestData& 
   }
 
   {
-    data.fp32_output_data = {
+    data.biased.fp32_output_data = {
         0.23503941f, 2.87619758f, 0.01845241f, -0.75242990f, 1.76869011f, -0.40492195f, -1.65323853f, 0.34011719f,
         -2.10573196f, 0.13281155f, 0.97480160f, 2.74546146f, -1.21957457f, -0.73649400f, 2.52938581f, 1.65599120f,
         1.83545303f, 0.85856718f, -0.48040742f, 1.86428785f, 1.29504943f, 1.38906729f, 0.06474495f, -0.51972288f,
@@ -2284,7 +2284,7 @@ void GetCrossAttentionData_Batch1_HeadSize32_LeftSidePadding(AttentionTestData& 
   }
 
   {
-    data.fp16_output_data = data.fp32_output_data;
+    data.biased.fp16_output_data = data.biased.fp32_output_data;
   }
 }
 
@@ -2483,11 +2483,11 @@ void GetCrossAttentionData_Batch2_HeadSize32_NoBias_NoMask_PackedKV(AttentionTes
 
   {
     // Do not test fp32
-    data.fp32_output_data = {};
+    data.non_biased.fp32_output_data = {};
   }
 
   {
-    data.fp16_output_data = {
+    data.non_biased.fp16_output_data = {
         -0.18665725f, 1.53655565f, -1.16219902f, -0.53553712f, -1.76899862f, -0.67172408f,
         -0.03719823f, -0.73519617f, -0.08289805f, -0.22439885f, -1.15095568f, 1.52012229f,
         -0.11608444f, 0.30267856f, 0.17237782f, 0.12366229f, -0.15282108f, 0.15652999f,
@@ -2660,11 +2660,11 @@ void GetSelfAttentionData_Batch2_HeadSize32_NoBias_NoMask_PackedQKV(AttentionTes
 
   {
     // Do not test fp32
-    data.fp32_output_data = {};
+    data.non_biased.fp32_output_data = {};
   }
 
   {
-    data.fp16_output_data = {
+    data.non_biased.fp16_output_data = {
         -1.30247164f, 0.91138631f, 0.27991560f, 0.92460269f, -1.14672589f, -0.25474626f,
         1.28006065f, 0.22122431f, -0.39251250f, 0.09537974f, 0.15242209f, 0.73424512f,
         0.65756959f, 0.10018224f, 0.49316248f, -0.49014348f, 0.03917319f, -1.05285788f,
@@ -2808,7 +2808,7 @@ void GetCrossAttentionData_HeadSize16_8(AttentionTestData& data) {
   }
 
   {
-    data.fp32_output_data = {
+    data.biased.fp32_output_data = {
         0.70553654f, 2.84393549f, -0.06753168f, -0.78168947f, 1.67733526f, -0.32306066f, -1.46519339f, -0.24197246f,
         0.68103230f, 0.09225838f, -0.12426007f, -2.19415975f, 0.82274425f, 0.54800904f, 0.77917045f, -0.37480056f,
         1.41798937f, 0.70201361f, -0.38768357f, 1.33144617f, 0.71884990f, 0.98060107f, 0.09563713f, -0.51187015f,
@@ -2819,7 +2819,7 @@ void GetCrossAttentionData_HeadSize16_8(AttentionTestData& data) {
   }
 
   {
-    data.fp16_output_data = data.fp32_output_data;
+    data.biased.fp16_output_data = data.biased.fp32_output_data;
   }
 }
 
@@ -2891,7 +2891,7 @@ void GetCrossAttentionData_HeadSize16(AttentionTestData& data) {
   }
 
   {
-    data.fp32_output_data = {
+    data.biased.fp32_output_data = {
         0.70553654f, 2.84393549f, -0.06753166f, -0.78168941f, 1.67733538f, -0.32306066f, -1.46519351f, -0.24197248f,
         -1.95703733f, 0.05333783f, 0.71154630f, 2.09348249f, -1.24223638f, -0.52374214f, 2.15032387f, 1.41931129f,
         -0.12594563f, 0.02337830f, -0.85073662f, -0.56283176f, -0.47189179f, -1.30011129f, 0.58861959f, -0.13839069f,
@@ -2904,7 +2904,7 @@ void GetCrossAttentionData_HeadSize16(AttentionTestData& data) {
   }
 
   {
-    data.fp16_output_data = data.fp32_output_data;
+    data.biased.fp16_output_data = data.biased.fp32_output_data;
   }
 }
 
@@ -2955,13 +2955,13 @@ void GetCrossAttentionDataWithPast(AttentionTestData& data) {
   }
 
   {
-    data.fp32_output_data = {
+    data.non_biased.fp32_output_data = {
         0.4291f, 0.5275f, 0.4818f, 0.4645f, 0.4770f, 0.4082f, 0.3372f, 0.4319f,
         0.4291f, 0.5276f, 0.4818f, 0.4645f, 0.4768f, 0.4083f, 0.3377f, 0.4315f};
   }
 
   {
-    data.fp16_output_data = data.fp32_output_data;
+    data.non_biased.fp16_output_data = data.non_biased.fp32_output_data;
   }
 }
 
@@ -3036,13 +3036,13 @@ void GetSelfAttentionData_WithPast_WithRelPosBias_ForT5(AttentionTestData& data)
   }
 
   {
-    data.fp32_output_data = {
+    data.non_biased.fp32_output_data = {
         0.4358f, 0.2708f, 0.3201f, 0.4347f, 0.1886f, 0.0845f, 0.2479f, 0.3289f,
         0.4157f, 0.2247f, 0.2826f, 0.4321f, 0.1874f, 0.1021f, 0.2427f, 0.3305f};
   }
 
   {
-    data.fp16_output_data = data.fp32_output_data;
+    data.non_biased.fp16_output_data = data.non_biased.fp32_output_data;
   }
 
   {
@@ -3472,7 +3472,7 @@ void GetAttentionDataCutlassRelPosBias(AttentionTestData& data) {
   }
 
   {
-    data.fp16_output_data = {
+    data.biased.fp16_output_data = {
         1.0419922f,
         0.13000488f,
         0.10528564f,
@@ -3548,7 +3548,7 @@ void GetAttentionDataCutlassRelPosBias(AttentionTestData& data) {
   }
 
   {
-    data.fp32_output_data = {};
+    data.biased.fp32_output_data = {};
   }
 
   data.is_static_kv = false;
@@ -3770,7 +3770,7 @@ void GetCrossAttentionData_DiffSequenceLengths(AttentionTestData& data) {
       0.31164435f,
   };
 
-  data.fp32_output_data = {
+  data.biased.fp32_output_data = {
       -0.53803939f,
       -0.33528122f,
       -0.16753256f,
@@ -4083,7 +4083,7 @@ void GetSelfAttentionData_WithPastAndPresent_NoMask_NoRelPosBias(AttentionTestDa
       -0.36910505f,
   };
 
-  data.fp32_output_data = {
+  data.biased.fp32_output_data = {
       -0.00033577532f,
       -0.23549549f,
       0.19853255f,
@@ -4218,7 +4218,7 @@ void GetCrossAttentionData_WithPastPassedInDirectly_NoMask(AttentionTestData& da
       0.50175804f, 0.37620395f, 0.24103148f, 0.50958070f,
       0.56803876f, 0.37866923f, 0.32273075f, 0.44389135f};
 
-  data.fp32_output_data = {
+  data.non_biased.fp32_output_data = {
       0.44753647f,
       0.52339733f,
       0.46447957f,

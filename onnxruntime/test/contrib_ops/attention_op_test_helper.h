@@ -33,8 +33,12 @@ struct AttentionTestData {
   std::vector<float> past_key_data;
   std::vector<float> past_value_data;
 
-  std::vector<float> fp32_output_data;
-  std::vector<float> fp16_output_data;
+  struct OutputData {
+    std::vector<float> fp32_output_data;
+    std::vector<float> fp16_output_data;
+  };
+  OutputData biased;      // output by using bias_data
+  OutputData non_biased;  // output by not using bias_data
 
   std::vector<float> present_key_data;
   std::vector<float> present_value_data;

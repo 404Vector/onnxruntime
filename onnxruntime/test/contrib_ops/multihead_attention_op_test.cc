@@ -363,7 +363,87 @@ static void RunMultiHeadAttentionKernel(
 }
 
 static void RunMultiHeadAttentionTests(AttentionTestData& data, bool disable_cpu = false) {
-  if (data.fp32_output_data.size() > 0) {
+  if (data.non_biased.fp32_output_data.size() > 0) {
+    constexpr bool use_float16 = false;
+
+    AttentionKernelType kernel_type = AttentionKernelType::AttentionKernel_Unfused;
+    if (!SkipAttentionKernel(data, kernel_type)) {
+      RunMultiHeadAttentionKernel(
+          data.query_data, data.key_data, data.value_data, data.kv_data, data.qkv_data, /*bias_data=*/{},
+          data.rel_pos_bias_data, data.past_key_data, data.past_value_data, data.present_key_data,
+          data.present_value_data, data.key_padding_mask_data, data.mask_type, data.non_biased.fp32_output_data,
+          data.num_heads, data.batch_size, data.sequence_length, data.kv_sequence_length, data.hidden_size,
+          data.v_hidden_size, kernel_type, use_float16, data.is_static_kv, disable_cpu);
+    }
+
+#if USE_FLASH_ATTENTION
+    if (data.sequence_length >= contrib::attention::kMinSequenceLengthForMemoryEfficientAttentionFp32 ||
+        data.kv_sequence_length >= contrib::attention::kMinSequenceLengthForMemoryEfficientAttentionFp32) {
+      kernel_type = AttentionKernelType::AttentionKernel_CutlassMemoryEfficientAttention;
+      if (!SkipAttentionKernel(data, kernel_type)) {
+        RunMultiHeadAttentionKernel(
+            data.query_data, data.key_data, data.value_data, data.kv_data, data.qkv_data, /*bias_data=*/{},
+            data.rel_pos_bias_data, data.past_key_data, data.past_value_data, data.present_key_data,
+            data.present_value_data, data.key_padding_mask_data, data.mask_type, data.non_biased.fp32_output_data,
+            data.num_heads, data.batch_size, data.sequence_length, data.kv_sequence_length, data.hidden_size,
+            data.v_hidden_size, kernel_type, use_float16, data.is_static_kv, disable_cpu);
+      }
+    }
+#endif
+
+    kernel_type = AttentionKernelType::AttentionKernel_Default;
+    RunMultiHeadAttentionKernel(
+        data.query_data, data.key_data, data.value_data, data.kv_data, data.qkv_data, /*bias_data=*/{},
+        data.rel_pos_bias_data, data.past_key_data, data.past_value_data, data.present_key_data,
+        data.present_value_data, data.key_padding_mask_data, data.mask_type, data.non_biased.fp32_output_data,
+        data.num_heads, data.batch_size, data.sequence_length, data.kv_sequence_length, data.hidden_size,
+        data.v_hidden_size, kernel_type, use_float16, data.is_static_kv, disable_cpu);
+  }
+
+  if (data.non_biased.fp16_output_data.size() > 0) {
+    constexpr bool use_float16 = true;
+    AttentionKernelType kernel_type = AttentionKernelType::AttentionKernel_TrtFusedCrossAttention;
+    if (!SkipAttentionKernel(data, kernel_type)) {
+      RunMultiHeadAttentionKernel(
+          data.query_data, data.key_data, data.value_data, data.kv_data, data.qkv_data, /*bias_data=*/{},
+          data.rel_pos_bias_data, data.past_key_data, data.past_value_data, data.present_key_data,
+          data.present_value_data, data.key_padding_mask_data, data.mask_type, data.non_biased.fp16_output_data,
+          data.num_heads, data.batch_size, data.sequence_length, data.kv_sequence_length, data.hidden_size,
+          data.v_hidden_size, kernel_type, use_float16, data.is_static_kv, disable_cpu);
+    }
+
+    kernel_type = AttentionKernelType::AttentionKernel_TrtFusedAttention;
+    if (!SkipAttentionKernel(data, kernel_type)) {
+      RunMultiHeadAttentionKernel(
+          data.query_data, data.key_data, data.value_data, data.kv_data, data.qkv_data, /*bias_data=*/{},
+          data.rel_pos_bias_data, data.past_key_data, data.past_value_data, data.present_key_data,
+          data.present_value_data, data.key_padding_mask_data, data.mask_type, data.non_biased.fp16_output_data,
+          data.num_heads, data.batch_size, data.sequence_length, data.kv_sequence_length, data.hidden_size,
+          data.v_hidden_size, kernel_type, use_float16, data.is_static_kv, disable_cpu);
+    }
+
+#if USE_FLASH_ATTENTION
+    kernel_type = AttentionKernelType::AttentionKernel_CutlassMemoryEfficientAttention;
+    if (!SkipAttentionKernel(data, kernel_type)) {
+      RunMultiHeadAttentionKernel(
+          data.query_data, data.key_data, data.value_data, data.kv_data, data.qkv_data, /*bias_data=*/{},
+          data.rel_pos_bias_data, data.past_key_data, data.past_value_data, data.present_key_data,
+          data.present_value_data, data.key_padding_mask_data, data.mask_type, data.non_biased.fp16_output_data,
+          data.num_heads, data.batch_size, data.sequence_length, data.kv_sequence_length, data.hidden_size,
+          data.v_hidden_size, kernel_type, use_float16, data.is_static_kv, disable_cpu);
+    }
+#endif
+
+    kernel_type = AttentionKernelType::AttentionKernel_Default;
+    RunMultiHeadAttentionKernel(
+        data.query_data, data.key_data, data.value_data, data.kv_data, data.qkv_data, /*bias_data=*/{},
+        data.rel_pos_bias_data, data.past_key_data, data.past_value_data, data.present_key_data,
+        data.present_value_data, data.key_padding_mask_data, data.mask_type, data.non_biased.fp16_output_data,
+        data.num_heads, data.batch_size, data.sequence_length, data.kv_sequence_length, data.hidden_size,
+        data.v_hidden_size, kernel_type, use_float16, data.is_static_kv, disable_cpu);
+  }
+
+  if (data.biased.fp32_output_data.size() > 0) {
     constexpr bool use_float16 = false;
 
     AttentionKernelType kernel_type = AttentionKernelType::AttentionKernel_Unfused;
@@ -371,7 +451,7 @@ static void RunMultiHeadAttentionTests(AttentionTestData& data, bool disable_cpu
       RunMultiHeadAttentionKernel(
           data.query_data, data.key_data, data.value_data, data.kv_data, data.qkv_data, data.bias_data,
           data.rel_pos_bias_data, data.past_key_data, data.past_value_data, data.present_key_data,
-          data.present_value_data, data.key_padding_mask_data, data.mask_type, data.fp32_output_data,
+          data.present_value_data, data.key_padding_mask_data, data.mask_type, data.biased.fp32_output_data,
           data.num_heads, data.batch_size, data.sequence_length, data.kv_sequence_length, data.hidden_size,
           data.v_hidden_size, kernel_type, use_float16, data.is_static_kv, disable_cpu);
     }
@@ -384,7 +464,7 @@ static void RunMultiHeadAttentionTests(AttentionTestData& data, bool disable_cpu
         RunMultiHeadAttentionKernel(
             data.query_data, data.key_data, data.value_data, data.kv_data, data.qkv_data, data.bias_data,
             data.rel_pos_bias_data, data.past_key_data, data.past_value_data, data.present_key_data,
-            data.present_value_data, data.key_padding_mask_data, data.mask_type, data.fp32_output_data,
+            data.present_value_data, data.key_padding_mask_data, data.mask_type, data.biased.fp32_output_data,
             data.num_heads, data.batch_size, data.sequence_length, data.kv_sequence_length, data.hidden_size,
             data.v_hidden_size, kernel_type, use_float16, data.is_static_kv, disable_cpu);
       }
@@ -395,19 +475,19 @@ static void RunMultiHeadAttentionTests(AttentionTestData& data, bool disable_cpu
     RunMultiHeadAttentionKernel(
         data.query_data, data.key_data, data.value_data, data.kv_data, data.qkv_data, data.bias_data,
         data.rel_pos_bias_data, data.past_key_data, data.past_value_data, data.present_key_data,
-        data.present_value_data, data.key_padding_mask_data, data.mask_type, data.fp32_output_data,
+        data.present_value_data, data.key_padding_mask_data, data.mask_type, data.biased.fp32_output_data,
         data.num_heads, data.batch_size, data.sequence_length, data.kv_sequence_length, data.hidden_size,
         data.v_hidden_size, kernel_type, use_float16, data.is_static_kv, disable_cpu);
   }
 
-  if (data.fp16_output_data.size() > 0) {
+  if (data.biased.fp16_output_data.size() > 0) {
     constexpr bool use_float16 = true;
     AttentionKernelType kernel_type = AttentionKernelType::AttentionKernel_TrtFusedCrossAttention;
     if (!SkipAttentionKernel(data, kernel_type)) {
       RunMultiHeadAttentionKernel(
           data.query_data, data.key_data, data.value_data, data.kv_data, data.qkv_data, data.bias_data,
           data.rel_pos_bias_data, data.past_key_data, data.past_value_data, data.present_key_data,
-          data.present_value_data, data.key_padding_mask_data, data.mask_type, data.fp16_output_data,
+          data.present_value_data, data.key_padding_mask_data, data.mask_type, data.biased.fp16_output_data,
           data.num_heads, data.batch_size, data.sequence_length, data.kv_sequence_length, data.hidden_size,
           data.v_hidden_size, kernel_type, use_float16, data.is_static_kv, disable_cpu);
     }
@@ -417,7 +497,7 @@ static void RunMultiHeadAttentionTests(AttentionTestData& data, bool disable_cpu
       RunMultiHeadAttentionKernel(
           data.query_data, data.key_data, data.value_data, data.kv_data, data.qkv_data, data.bias_data,
           data.rel_pos_bias_data, data.past_key_data, data.past_value_data, data.present_key_data,
-          data.present_value_data, data.key_padding_mask_data, data.mask_type, data.fp16_output_data,
+          data.present_value_data, data.key_padding_mask_data, data.mask_type, data.biased.fp16_output_data,
           data.num_heads, data.batch_size, data.sequence_length, data.kv_sequence_length, data.hidden_size,
           data.v_hidden_size, kernel_type, use_float16, data.is_static_kv, disable_cpu);
     }
@@ -428,7 +508,7 @@ static void RunMultiHeadAttentionTests(AttentionTestData& data, bool disable_cpu
       RunMultiHeadAttentionKernel(
           data.query_data, data.key_data, data.value_data, data.kv_data, data.qkv_data, data.bias_data,
           data.rel_pos_bias_data, data.past_key_data, data.past_value_data, data.present_key_data,
-          data.present_value_data, data.key_padding_mask_data, data.mask_type, data.fp16_output_data,
+          data.present_value_data, data.key_padding_mask_data, data.mask_type, data.biased.fp16_output_data,
           data.num_heads, data.batch_size, data.sequence_length, data.kv_sequence_length, data.hidden_size,
           data.v_hidden_size, kernel_type, use_float16, data.is_static_kv, disable_cpu);
     }
@@ -438,7 +518,7 @@ static void RunMultiHeadAttentionTests(AttentionTestData& data, bool disable_cpu
     RunMultiHeadAttentionKernel(
         data.query_data, data.key_data, data.value_data, data.kv_data, data.qkv_data, data.bias_data,
         data.rel_pos_bias_data, data.past_key_data, data.past_value_data, data.present_key_data,
-        data.present_value_data, data.key_padding_mask_data, data.mask_type, data.fp16_output_data,
+        data.present_value_data, data.key_padding_mask_data, data.mask_type, data.biased.fp16_output_data,
         data.num_heads, data.batch_size, data.sequence_length, data.kv_sequence_length, data.hidden_size,
         data.v_hidden_size, kernel_type, use_float16, data.is_static_kv, disable_cpu);
   }
