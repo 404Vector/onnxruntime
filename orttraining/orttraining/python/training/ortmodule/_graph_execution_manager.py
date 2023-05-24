@@ -204,7 +204,7 @@ class GraphExecutionManager(GraphExecutionInterface):
             except ImportError:
                 pass
             else:
-                from onnxruntime.training.ortmodule.ort_triton import register_triton_op_executor
+                from .ort_triton import register_triton_op_executor
 
                 register_triton_op_executor()
 

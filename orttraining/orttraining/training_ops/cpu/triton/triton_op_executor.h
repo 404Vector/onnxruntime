@@ -6,6 +6,7 @@
 #pragma once
 
 #include "orttraining/core/framework/torch/torch_proxy.h"
+#include "orttraining/core/framework/torch/gil.h"
 
 namespace onnxruntime {
 namespace contrib {
@@ -39,6 +40,8 @@ class TritonOpExecutor final {
   }
 
   std::string GetConfigJson() {
+    // Python-related calls should happen only if guard is alive.
+    GilGuard guard;
     ORT_ENFORCE(config_getter_.get() != nullptr);
     PythonObjectPtr ret(PyObject_CallObject(config_getter_.get(), nullptr), PythonObjectDeleter);
     char* buffer = nullptr;

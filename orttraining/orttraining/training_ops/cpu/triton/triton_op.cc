@@ -28,6 +28,9 @@ bool TritonOp::IsBoolOutput(size_t index) const {
 }
 
 Status TritonOp::Compute(OpKernelContext* context) const {
+  // Python-related calls should happen only if guard is alive.
+  GilGuard guard;
+
   auto* p_ctx_internal = reinterpret_cast<OpKernelContextInternal*>(context);
   size_t input_size = static_cast<size_t>(p_ctx_internal->InputCount());
   size_t output_size = static_cast<size_t>(p_ctx_internal->OutputCount());
@@ -80,6 +83,8 @@ bool IsTritonOpExecutorInitialized() { return TritonOpExecutor::Instance().IsIni
 Status ExecuteTritonOpByFuncName(OpKernelContext* p_ctx, const std::string& func_name, size_t input_count,
                                  size_t output_count,
                                  const InlinedHashMap<std::string, std::pair<std::string, int>>& kwargs) {
+  // Python-related calls should happen only if guard is alive.
+  GilGuard guard;
   auto* p_ctx_internal = reinterpret_cast<OpKernelContextInternal*>(p_ctx);
   ORT_ENFORCE(TritonOpExecutor::Instance().IsInitialized());
   PythonObjectPtr args(PyTuple_New(static_cast<Py_ssize_t>(1 + input_count + output_count)), PythonObjectDeleter);

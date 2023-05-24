@@ -189,7 +189,7 @@ def _run_step(model, *tensors):
 
 
 def _run_module_test(module_cls, dtype, gen_inputs_func, triton_op_count, **kwargs):
-    pt_model = module_cls().to(DEVICE)
+    pt_model = module_cls().to(DEVICE).to(dtype)
     ort_model = ORTModule(copy.deepcopy(pt_model), DebugOptions(save_onnx=True, onnx_prefix="triton_model"))
     rtol = kwargs.get("rtol", 1e-03 if dtype == torch.float16 else 1e-04)
     atol = kwargs.get("atol", 1e-03 if dtype == torch.float16 else 1e-05)
@@ -218,7 +218,7 @@ def _run_module_test(module_cls, dtype, gen_inputs_func, triton_op_count, **kwar
 
 
 def _run_tunable_op_test(module_cls, dtype, gen_inputs_func, tunable_op, impl_count, **kwargs):
-    pt_model = module_cls().to(DEVICE)
+    pt_model = module_cls().to(DEVICE).to(dtype)
     ort_model = ORTModule(copy.deepcopy(pt_model))
     rtol = kwargs.get("rtol", 1e-03 if dtype == torch.float16 else 1e-04)
     atol = kwargs.get("atol", 1e-03 if dtype == torch.float16 else 1e-05)
@@ -253,8 +253,9 @@ def _run_tunable_op_test(module_cls, dtype, gen_inputs_func, tunable_op, impl_co
             ort_output = _run_step(ort_model, *ort_inputs)
             _test_helpers.assert_values_are_close(pt_output, ort_output, rtol=rtol, atol=atol)
             _test_helpers.assert_gradients_match_and_reset_gradient(pt_model, ort_model, rtol=rtol, atol=atol)
-        assert str(new_tunable_results) == str(
-            ort_model._torch_module._execution_manager(True)._execution_agent._inference_session.get_tuning_results()
+        assert (
+            new_tunable_results
+            == ort_model._torch_module._execution_manager(True)._execution_agent._inference_session.get_tuning_results()
         )
     os.remove(tunable_results_file)
     del os.environ["ORTMODULE_TUNING_RESULTS_PATH"]
