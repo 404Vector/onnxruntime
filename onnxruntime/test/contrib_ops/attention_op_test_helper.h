@@ -30,18 +30,16 @@ struct AttentionTestData {
   std::vector<float> bias_data;
   std::vector<float> rel_pos_bias_data;
 
-  std::vector<float> past_key_data;
-  std::vector<float> past_value_data;
-
   struct OutputData {
+    std::vector<float> past_key_data;
+    std::vector<float> past_value_data;
     std::vector<float> fp32_output_data;
     std::vector<float> fp16_output_data;
+    std::vector<float> present_key_data;
+    std::vector<float> present_value_data;
   };
   OutputData biased;      // output by using bias_data
   OutputData non_biased;  // output by not using bias_data
-
-  std::vector<float> present_key_data;
-  std::vector<float> present_value_data;
 
   std::vector<AttentionKernelType> skip_kernel_types;  // skip some kernels if they do not supported this test case.
 };

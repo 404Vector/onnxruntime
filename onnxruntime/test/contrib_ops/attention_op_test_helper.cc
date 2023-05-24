@@ -3066,7 +3066,7 @@ void GetCrossAttentionDataWithPast(AttentionTestData& data) {
   }
   // The past key and value data will be passed to the kernel as input 'key' and 'value'.
   {
-    data.past_key_data = {
+    data.non_biased.past_key_data = {
         0.5967375f, 0.5966938f, 0.48602432f, 0.5341031f,
         0.55797786f, 0.5663399f, 0.57087725f, 0.6240304f,
         0.5352563f, 0.5648297f, 0.4972945f, 0.56637144f,
@@ -3077,7 +3077,7 @@ void GetCrossAttentionDataWithPast(AttentionTestData& data) {
   }
 
   {
-    data.past_value_data = {
+    data.non_biased.past_value_data = {
         0.40251260f, 0.55487730f, 0.49565578f, 0.42683450f,
         0.44379145f, 0.58945787f, 0.54852820f, 0.43376005f,
         0.44116694f, 0.44007313f, 0.40293324f, 0.53202707f,
@@ -3147,7 +3147,7 @@ void GetSelfAttentionData_WithPast_WithRelPosBias_ForT5(AttentionTestData& data)
   }
 
   {
-    data.past_key_data = {
+    data.non_biased.past_key_data = {
         0.34734827f, 0.5592256f, 0.5333037f, 0.5122027f,
         0.5940516f, 0.44744077f, 0.43128848f, 0.55360645f,
         0.57874715f, 0.29512063f, 0.2780432f, 0.4693917f,
@@ -3158,7 +3158,7 @@ void GetSelfAttentionData_WithPast_WithRelPosBias_ForT5(AttentionTestData& data)
   }
 
   {
-    data.past_value_data = {
+    data.non_biased.past_value_data = {
         0.48998538f, 0.5493853f, 0.556647f, 0.7011929f,
         0.543909f, 0.5630743f, 0.5087797f, 0.3901024f,
         0.53116417f, 0.4086225f, 0.5320247f, 0.5145377f,
@@ -3179,7 +3179,7 @@ void GetSelfAttentionData_WithPast_WithRelPosBias_ForT5(AttentionTestData& data)
   }
 
   {
-    data.present_key_data = {
+    data.non_biased.present_key_data = {
         0.3473f, 0.5592f, 0.5333f, 0.5122f,
         0.5941f, 0.4474f, 0.4313f, 0.5536f,
         0.5787f, 0.2951f, 0.2780f, 0.4694f,
@@ -3194,7 +3194,7 @@ void GetSelfAttentionData_WithPast_WithRelPosBias_ForT5(AttentionTestData& data)
   }
 
   {
-    data.present_value_data = {
+    data.non_biased.present_value_data = {
         0.4900f, 0.5494f, 0.5566f, 0.7012f,
         0.5439f, 0.5631f, 0.5088f, 0.3901f,
         0.5312f, 0.4086f, 0.5320f, 0.5145f,
@@ -3939,7 +3939,7 @@ void GetCrossAttentionData_DiffSequenceLengths(AttentionTestData& data) {
       0.25871021f,
   };
 
-  data.present_key_data = {
+  data.biased.present_key_data = {
       0.18157977f,
       0.067748934f,
       0.17747428f,
@@ -4008,7 +4008,7 @@ void GetCrossAttentionData_DiffSequenceLengths(AttentionTestData& data) {
       0.5030486f,
       -0.179667f,
   };
-  data.present_value_data = {
+  data.biased.present_value_data = {
       -0.76709247f,
       -0.46270815f,
       -0.35976538f,
@@ -4179,7 +4179,7 @@ void GetSelfAttentionData_WithPastAndPresent_NoMask_NoRelPosBias(AttentionTestDa
       0.38532683f,
   };
 
-  data.past_key_data = {
+  data.biased.past_key_data = {
       0.12724897f,
       0.22341636f,
       -0.48387079f,
@@ -4197,7 +4197,7 @@ void GetSelfAttentionData_WithPastAndPresent_NoMask_NoRelPosBias(AttentionTestDa
       -0.14260243f,
       -0.45640854f,
   };
-  data.past_value_data = {
+  data.biased.past_value_data = {
       -0.19523193f,
       -0.10181432f,
       0.20495883f,
@@ -4235,7 +4235,7 @@ void GetSelfAttentionData_WithPastAndPresent_NoMask_NoRelPosBias(AttentionTestDa
       0.26487666f,
   };
 
-  data.present_key_data = {
+  data.biased.present_key_data = {
       0.12724897f,
       0.22341636f,
       -0.4838708f,
@@ -4272,7 +4272,7 @@ void GetSelfAttentionData_WithPastAndPresent_NoMask_NoRelPosBias(AttentionTestDa
       -0.28299156f,
       0.10839023f,
   };
-  data.present_value_data = {
+  data.biased.present_value_data = {
       -0.19523193f,
       -0.10181432f,
       0.20495883f,
@@ -4334,7 +4334,7 @@ void GetCrossAttentionData_WithPastPassedInDirectly_NoMask(AttentionTestData& da
       -0.02661306f, 0.26251313f, 0.30725253f, -0.34759378f,
       -0.11695808f, -0.13129434f, -0.17031054f, -0.14986445f,
       -0.02826184f, 0.2797631f, 0.27337456f, -0.44312602f};
-  data.past_key_data = {
+  data.non_biased.past_key_data = {
       0.5967375f, 0.5966938f, 0.48602432f, 0.5341031f,
       0.55797786f, 0.5663399f, 0.57087725f, 0.6240304f,
       0.5352563f, 0.5648297f, 0.4972945f, 0.56637144f,
@@ -4342,7 +4342,7 @@ void GetCrossAttentionData_WithPastPassedInDirectly_NoMask(AttentionTestData& da
       0.44123724f, 0.35872823f, 0.32176313f, 0.4490301f,
       0.3643952f, 0.51968557f, 0.50137347f, 0.5743993f,
       0.3905106f, 0.4741712f, 0.40881708f, 0.47243845f};
-  data.past_value_data = {
+  data.non_biased.past_value_data = {
       0.40251260f, 0.55487730f, 0.49565578f, 0.42683450f,
       0.44379145f, 0.58945787f, 0.54852820f, 0.43376005f,
       0.44116694f, 0.44007313f, 0.40293324f, 0.53202707f,
