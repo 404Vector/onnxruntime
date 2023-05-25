@@ -27,7 +27,7 @@ namespace Microsoft.ML.OnnxRuntime.Tests
                 Assert.True(strTensor.IsTensor);
                 Assert.False(strTensor.IsSparseTensor);
                 Assert.Equal(OnnxValueType.ONNX_TYPE_TENSOR, strTensor.OnnxType);
-                using(var typeShape = strTensor.GetTensorTypeAndShape())
+                using (var typeShape = strTensor.GetTensorTypeAndShape())
                 {
                     Assert.True(typeShape.IsString);
                     Assert.Equal(shape.Length, typeShape.GetDimensionsCount());
@@ -37,7 +37,7 @@ namespace Microsoft.ML.OnnxRuntime.Tests
                     Assert.Equal(elementsNum, typeShape.GetElementCount());
                 }
 
-                using(var memInfo = strTensor.GetTensorMemoryInfo())
+                using (var memInfo = strTensor.GetTensorMemoryInfo())
                 {
                     Assert.Equal("Cpu", memInfo.Name);
                     Assert.Equal(OrtMemType.Default, memInfo.GetMemoryType());
@@ -45,7 +45,7 @@ namespace Microsoft.ML.OnnxRuntime.Tests
                 }
 
                 // Verify that everything is empty now.
-                for(int i = 0; i < elementsNum; ++i)
+                for (int i = 0; i < elementsNum; ++i)
                 {
                     var str = strTensor.GetStringElement(i);
                     Assert.Empty(str);
@@ -58,7 +58,7 @@ namespace Microsoft.ML.OnnxRuntime.Tests
                 }
 
                 // Let's populate the tensor with strings.
-                for(int i = 0; i < elementsNum; ++i)
+                for (int i = 0; i < elementsNum; ++i)
                 {
                     // First populate via ROM
                     strTensor.FillStringTensorElement(strsRom[i].AsMemory(), i);
@@ -75,5 +75,45 @@ namespace Microsoft.ML.OnnxRuntime.Tests
             }
         }
 
+        [Fact(DisplayName = "PopulateAndReadStringTensorViaTensor")]
+        public void PopulateAndReadStringTensorViaTensor()
+        {
+            OrtEnv.Instance();
+
+            var strs = new string[] { "Hello", "Ort", "World" };
+            var shape = new int[] { 1, 1, 3 };
+
+            var tensor = new DenseTensor<string>(strs, shape);
+
+            using (var strTensor = OrtValue.CreateStringTensor(tensor))
+            {
+                Assert.True(strTensor.IsTensor);
+                Assert.False(strTensor.IsSparseTensor);
+                Assert.Equal(OnnxValueType.ONNX_TYPE_TENSOR, strTensor.OnnxType);
+                using (var typeShape = strTensor.GetTensorTypeAndShape())
+                {
+                    Assert.True(typeShape.IsString);
+                    Assert.Equal(shape.Length, typeShape.GetDimensionsCount());
+                    var fetchedShape = typeShape.GetShape();
+                    Assert.Equal(shape.Length, fetchedShape.Length);
+                    Assert.Equal(strs.Length, typeShape.GetElementCount());
+                }
+
+                using (var memInfo = strTensor.GetTensorMemoryInfo())
+                {
+                    Assert.Equal("Cpu", memInfo.Name);
+                    Assert.Equal(OrtMemType.Default, memInfo.GetMemoryType());
+                    Assert.Equal(OrtAllocatorType.DeviceAllocator, memInfo.GetAllocatorType());
+                }
+
+                for (int i = 0; i < strs.Length; ++i)
+                {
+                    // Fill via Span
+                    Assert.Equal(strs[i], strTensor.GetStringElement(i));
+                    Assert.Equal(strs[i], strTensor.GetStringElementAsMemory(i).ToString());
+                    Assert.True(Encoding.UTF8.GetBytes(strs[i]).AsSpan().SequenceEqual(strTensor.GetStringElementAsSpan(i)));
+                }
+            }
+        }
     }
 }

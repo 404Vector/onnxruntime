@@ -128,25 +128,10 @@ namespace Microsoft.ML.OnnxRuntime
                 }
                 else
                 {
-                    var offsets = new UIntPtr[Count];
-                    NativeApiStatus.VerifySuccess(NativeMethods.OrtGetStringTensorDataLength(ortValue.Handle, out UIntPtr strLen));
-                    var dataBuffer = new byte[strLen.ToUInt64()];
-
-                    NativeApiStatus.VerifySuccess(
-                        NativeMethods.OrtGetStringTensorContent(
-                        ortValue.Handle, dataBuffer, strLen,
-                        offsets,
-                        (UIntPtr)Count));
-
                     _dataBufferAsString = new string[Count];
-
-                    for (var i = 0; i < offsets.Length; i++)
+                    for(int i = 0; i < Count; ++i)
                     {
-                        var length = (i == offsets.Length - 1)
-                            ? strLen.ToUInt64() - offsets[i].ToUInt64()
-                            : offsets[i + 1].ToUInt64() - offsets[i].ToUInt64();
-                        // ORT API specifies strings always in UTF-8, no trailing null, no leading BOM
-                        _dataBufferAsString[i] = Encoding.UTF8.GetString(dataBuffer, (int)offsets[i], (int)length);
+                        _dataBufferAsString[i] = ortValue.GetStringElement(i);
                     }
                 }
             }
